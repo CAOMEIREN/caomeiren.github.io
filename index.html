@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>进销存管理系统 - 支持多商品包裹</title>
+    <title>草莓人赚钱计划 - 进销存管理系统</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --success: #4cc9f0;
-            --warning: #f72585;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --gray: #6c757d;
-            --light-gray: #e9ecef;
+            --primary-light: #F8E1E7; /* 淡粉色 */
+            --primary: #E8B4BC; /* 主粉色 */
+            --primary-dark: #D48A94; /* 深粉色 */
+            --secondary: #A5C9CA; /* 莫兰迪蓝 */
+            --accent: #9DB0A5; /* 莫兰迪绿 */
+            --light: #F9F5F0; /* 浅米色 */
+            --text: #5C5C5C; /* 主文本色 */
+            --text-light: #888888; /* 副文本色 */
+            --warning: #F9B572; /* 警告色 */
+            --danger: #E97777; /* 危险色 */
         }
         
         * {
@@ -25,798 +28,840 @@
         }
         
         body {
-            background-color: #f5f7fb;
-            color: var(--dark);
+            background-color: var(--light);
+            color: var(--text);
             line-height: 1.6;
         }
         
         .container {
-            max-width: 100%;
-            padding: 0 15px;
+            max-width: 1400px;
             margin: 0 auto;
+            padding: 20px;
         }
         
-        .app-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: white;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header-content {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
             display: flex;
             align-items: center;
+            gap: 15px;
         }
         
         .logo i {
-            margin-right: 10px;
+            font-size: 2.5rem;
         }
         
-        .nav-tabs {
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        nav {
             display: flex;
-            background: white;
-            border-bottom: 1px solid var(--light-gray);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+            gap: 15px;
+            margin-top: 15px;
         }
         
-        .tab {
-            padding: 15px 20px;
-            cursor: pointer;
-            white-space: nowrap;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-            font-weight: 500;
-        }
-        
-        .tab.active {
-            border-bottom: 3px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .tab-content {
-            padding: 20px 0;
-        }
-        
-        .tab-pane {
-            display: none;
-        }
-        
-        .tab-pane.active {
-            display: block;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        
-        .card-header {
-            padding: 15px 20px;
-            background: var(--light);
-            border-bottom: 1px solid var(--light-gray);
+        .nav-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1rem;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-btn:hover, .nav-btn.active {
+            background-color: white;
+            color: var(--primary-dark);
+        }
+        
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .dashboard, .content-section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .dashboard {
+            grid-column: span 2;
+        }
+        
+        .section-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-light);
         }
         
-        .card-body {
+        .section-title h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-light), white);
+            border-radius: 12px;
             padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
-        .form-group {
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary-dark);
             margin-bottom: 15px;
         }
         
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: var(--dark);
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin: 5px 0;
         }
         
-        input, select, textarea {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
         }
         
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        .trend {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 15px;
+            margin-left: 8px;
         }
         
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            text-align: center;
+        .trend.up {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: #2E7D32;
         }
         
-        .btn:hover {
-            background: var(--secondary);
-            transform: translateY(-2px);
+        .trend.down {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: #C62828;
         }
         
-        .btn-block {
-            display: block;
-            width: 100%;
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
         }
         
-        .btn-warning {
-            background: var(--warning);
-        }
-        
-        .btn-warning:hover {
-            background: #e31771;
-        }
-        
-        .btn-success {
-            background: #06d6a0;
-        }
-        
-        .btn-success:hover {
-            background: #05b388;
-        }
-        
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 0.85rem;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        .chart-box {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
-        }
-        
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--light-gray);
+            margin-top: 15px;
         }
         
         th {
-            background: var(--light);
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            padding: 12px 15px;
+            text-align: left;
             font-weight: 600;
         }
         
-        tbody tr:hover {
-            background: rgba(67, 97, 238, 0.05);
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--primary-light);
         }
         
-        .stock-low {
-            color: var(--warning);
-            font-weight: bold;
+        tr:hover {
+            background-color: rgba(248, 225, 231, 0.3);
         }
         
-        .product-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 5px;
-            background: #f0f0f0;
-            display: flex;
+        .warning {
+            background-color: rgba(249, 181, 114, 0.2);
+            color: var(--danger);
+            font-weight: 600;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            color: var(--gray);
+            gap: 8px;
         }
         
-        .stats-card {
-            text-align: center;
-            padding: 20px;
+        .btn:hover {
+            background-color: var(--primary-dark);
         }
         
-        .stats-value {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 10px 0;
+        .btn-secondary {
+            background-color: var(--secondary);
         }
         
-        .stats-label {
-            color: var(--gray);
-            font-size: 0.9rem;
+        .btn-secondary:hover {
+            background-color: #8db1b2;
         }
         
-        .alert {
-            padding: 15px;
-            border-radius: 5px;
+        .btn-accent {
+            background-color: var(--accent);
+        }
+        
+        .btn-accent:hover {
+            background-color: #889e91;
+        }
+        
+        .form-group {
             margin-bottom: 20px;
         }
         
-        .alert-warning {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
         }
         
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px dashed #ddd;
-            font-weight: bold;
-        }
-        
-        .profit {
-            color: #06d6a0;
-        }
-        
-        .loss {
-            color: var(--warning);
-        }
-        
-        .mobile-menu {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 10px 0;
-            border-top: 1px solid var(--light-gray);
-            z-index: 100;
-        }
-        
-        .menu-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-        
-        .menu-item.active {
-            color: var(--primary);
-        }
-        
-        .menu-item i {
-            font-size: 1.2rem;
-            margin-bottom: 5px;
-        }
-        
-        .package-items {
-            background: #f8f9fa;
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
             border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
+            font-size: 1rem;
+            transition: border 0.3s ease;
         }
         
-        .package-item {
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            position: relative;
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(232, 180, 188, 0.3);
         }
         
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .item-actions {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .item-row {
+        .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .file-upload {
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
         
-        .item-calculations {
-            background: #e8f4ff;
-            border-radius: 6px;
-            padding: 10px;
-            margin-top: 10px;
+        .file-upload-btn {
+            background-color: var(--secondary);
+        }
+        
+        .inventory-warning {
+            background-color: rgba(233, 119, 119, 0.15);
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-light);
             font-size: 0.9rem;
         }
         
-        .calculation-row {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-        }
-        
-        .calculation-row.total {
-            font-weight: bold;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed #b8d8ff;
-        }
-        
-        .package-summary {
-            background: #e2f0e9;
+        .product-image {
+            width: 60px;
+            height: 60px;
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        
-        .summary-title {
-            font-weight: bold;
-            margin-bottom: 10px;
+            object-fit: cover;
+            background-color: var(--primary-light);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
         }
         
-        @media (min-width: 768px) {
-            .container {
-                max-width: 750px;
-            }
-            
-            .mobile-menu {
-                display: none;
-            }
-            
-            .nav-tabs {
-                justify-content: center;
-            }
-            
-            .item-row {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
+        .actions {
+            display: flex;
+            gap: 8px;
         }
         
-        @media (min-width: 992px) {
-            .container {
-                max-width: 970px;
-            }
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-light);
+            color: var(--primary-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
         }
         
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1140px;
-            }
+        .action-btn:hover {
+            background-color: var(--primary);
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="app-header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-boxes"></i>
-                    <span>进销存管理系统</span>
-                </div>
-                <div class="user-info">
-                    <i class="fas fa-user-circle"></i> 管理员
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="nav-tabs">
-        <div class="tab" data-tab="products">商品档案</div>
-        <div class="tab active" data-tab="inbound">入库管理</div>
-        <div class="tab" data-tab="outbound">销售出库</div>
-        <div class="tab" data-tab="inventory">库存看板</div>
-    </div>
-
     <div class="container">
-        <div class="tab-content">
-            <!-- 入库管理 - 已更新支持多商品包裹 -->
-            <div id="inbound" class="tab-pane active">
-                <div class="card">
-                    <div class="card-header">
-                        <span>添加入库记录</span>
-                    </div>
-                    <div class="card-body">
-                        <form id="inboundForm">
-                            <div class="form-group">
-                                <label for="inboundId">入库单号</label>
-                                <input type="text" id="inboundId" placeholder="例如: IN20230622001" required value="IN20230715001">
-                            </div>
-                            <div class="form-group">
-                                <label for="inboundDate">入库日期</label>
-                                <input type="date" id="inboundDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="shippingCost">包裹运费</label>
-                                <input type="number" id="shippingCost" placeholder="输入总运费" step="0.01" required value="150">
-                            </div>
-                            
-                            <div class="package-items">
-                                <div class="package-header">
-                                    <h3>包裹商品</h3>
-                                    <p class="text-muted">一个包裹可包含多个商品，系统会自动分摊运费成本</p>
-                                </div>
-                                
-                                <!-- 包裹商品项目容器 -->
-                                <div id="packageItemsContainer">
-                                    <!-- 商品项目会动态添加到这里 -->
-                                </div>
-                                
-                                <button type="button" id="addItemBtn" class="btn btn-block">
-                                    <i class="fas fa-plus-circle"></i> 添加商品
-                                </button>
-                            </div>
-                            
-                            <!-- 包裹汇总信息 -->
-                            <div class="package-summary">
-                                <div class="summary-title">
-                                    <span>包裹汇总</span>
-                                    <span id="itemCount">0 个商品</span>
-                                </div>
-                                <div class="calculation-row">
-                                    <span>商品总金额:</span>
-                                    <span id="totalProductAmount">¥0.00</span>
-                                </div>
-                                <div class="calculation-row">
-                                    <span>包裹运费:</span>
-                                    <span id="displayShippingCost">¥0.00</span>
-                                </div>
-                                <div class="calculation-row total">
-                                    <span>包裹总成本:</span>
-                                    <span id="totalPackageCost">¥0.00</span>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="btn btn-block" style="margin-top: 20px;">
-                                <i class="fas fa-save"></i> 保存入库记录
-                            </button>
-                        </form>
+        <header>
+            <div class="logo">
+                <i class="fas fa-strawberry"></i>
+                <h1>草莓人赚钱计划</h1>
+            </div>
+            <div>
+                <nav>
+                    <button class="nav-btn active" data-target="dashboard"><i class="fas fa-chart-line"></i> 主看板</button>
+                    <button class="nav-btn" data-target="products"><i class="fas fa-box-open"></i> 商品档案</button>
+                    <button class="nav-btn" data-target="inbound"><i class="fas fa-arrow-circle-down"></i> 入库管理</button>
+                    <button class="nav-btn" data-target="outbound"><i class="fas fa-arrow-circle-up"></i> 销售出库</button>
+                    <button class="nav-btn" data-target="inventory"><i class="fas fa-warehouse"></i> 库存看板</button>
+                </nav>
+            </div>
+        </header>
+        
+        <main>
+            <!-- 主看板 -->
+            <section id="dashboard" class="dashboard content-section">
+                <div class="section-title">
+                    <h2><i class="fas fa-chart-pie"></i> 销售数据概览</h2>
+                    <div>
+                        <button class="btn"><i class="fas fa-download"></i> 导出报表</button>
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <span>最近入库记录</span>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <i class="fas fa-shopping-cart"></i>
+                        <div class="stat-value">¥8,542</div>
+                        <div class="stat-label">今日销售额</div>
                     </div>
-                    <div class="card-body">
-                        <div class="table-container">
+                    <div class="stat-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <div class="stat-value">¥245,680 <span class="trend up"><i class="fas fa-arrow-up"></i> 12.5%</span></div>
+                        <div class="stat-label">月销售额</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-percentage"></i>
+                        <div class="stat-value">38.7% <span class="trend up"><i class="fas fa-arrow-up"></i> 2.3%</span></div>
+                        <div class="stat-label">平均毛利率</div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">库存预警商品</div>
+                    </div>
+                </div>
+                
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <h3>月销售商品排行榜 TOP10</h3>
+                        <canvas id="topProductsChart" height="250"></canvas>
+                    </div>
+                    <div class="chart-box">
+                        <h3>30天未售出商品</h3>
+                        <div style="height: 250px; overflow-y: auto;">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>入库单号</th>
-                                        <th>日期</th>
-                                        <th>商品数量</th>
-                                        <th>运费</th>
-                                        <th>总成本</th>
-                                        <th>操作</th>
+                                        <th>商品ID</th>
+                                        <th>商品名称</th>
+                                        <th>库存</th>
+                                        <th>最后销售</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>IN20230621003</td>
-                                        <td>2023-06-21</td>
-                                        <td>2</td>
-                                        <td>¥120.00</td>
-                                        <td>¥3,420.00</td>
-                                        <td><button class="btn btn-sm">查看</button></td>
+                                        <td>SP10025</td>
+                                        <td>草莓味护手霜</td>
+                                        <td>35</td>
+                                        <td>32天前</td>
                                     </tr>
                                     <tr>
-                                        <td>IN20230618002</td>
-                                        <td>2023-06-18</td>
-                                        <td>3</td>
-                                        <td>¥85.00</td>
-                                        <td>¥4,850.00</td>
-                                        <td><button class="btn btn-sm">查看</button></td>
+                                        <td>SP10042</td>
+                                        <td>草莓印花毛巾</td>
+                                        <td>28</td>
+                                        <td>35天前</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SP10018</td>
+                                        <td>草莓造型钥匙扣</td>
+                                        <td>52</td>
+                                        <td>41天前</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SP10033</td>
+                                        <td>草莓主题马克杯</td>
+                                        <td>19</td>
+                                        <td>37天前</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SP10056</td>
+                                        <td>草莓香薰蜡烛</td>
+                                        <td>23</td>
+                                        <td>45天前</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
             
-            <!-- 其他标签页内容保持不变 -->
-        </div>
+            <!-- 商品档案 -->
+            <section id="products" class="content-section hidden">
+                <div class="section-title">
+                    <h2><i class="fas fa-box-open"></i> 商品档案管理</h2>
+                    <div>
+                        <button class="btn file-upload-btn"><i class="fas fa-file-import"></i> 导入商品</button>
+                        <button class="btn"><i class="fas fa-plus"></i> 新增商品</button>
+                    </div>
+                </div>
+                
+                <div class="file-upload">
+                    <input type="file" id="productImport" accept=".xlsx, .csv">
+                    <button class="btn"><i class="fas fa-upload"></i> 上传文件</button>
+                    <span>支持.xlsx和.csv格式文件</span>
+                </div>
+                
+                <div style="overflow-x: auto; margin-top: 25px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>图片</th>
+                                <th>商品ID</th>
+                                <th>商品名称</th>
+                                <th>成本价</th>
+                                <th>库存</th>
+                                <th>最近入库</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div class="product-image"><i class="fas fa-image"></i></div></td>
+                                <td>SP10001</td>
+                                <td>新鲜草莓500g</td>
+                                <td>¥12.80</td>
+                                <td>125</td>
+                                <td>2023-07-15</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="product-image"><i class="fas fa-image"></i></div></td>
+                                <td>SP10002</td>
+                                <td>草莓果酱250ml</td>
+                                <td>¥18.50</td>
+                                <td>86</td>
+                                <td>2023-07-18</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="product-image"><i class="fas fa-image"></i></div></td>
+                                <td>SP10003</td>
+                                <td>草莓干零食100g</td>
+                                <td>¥15.20</td>
+                                <td>42</td>
+                                <td>2023-07-10</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="warning">
+                                <td><div class="product-image"><i class="fas fa-image"></i></div></td>
+                                <td>SP10004</td>
+                                <td>草莓味酸奶200ml</td>
+                                <td>¥6.50</td>
+                                <td>1</td>
+                                <td>2023-07-05</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div class="product-image"><i class="fas fa-image"></i></div></td>
+                                <td>SP10005</td>
+                                <td>草莓蛋糕300g</td>
+                                <td>¥32.80</td>
+                                <td>24</td>
+                                <td>2023-07-20</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- 入库管理 -->
+            <section id="inbound" class="content-section hidden">
+                <div class="section-title">
+                    <h2><i class="fas fa-arrow-circle-down"></i> 入库管理</h2>
+                    <div>
+                        <button class="btn"><i class="fas fa-plus"></i> 添加入库</button>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trackingNumber">包裹运单号</label>
+                        <input type="text" id="trackingNumber" placeholder="输入运单号">
+                    </div>
+                    <div class="form-group">
+                        <label for="shippingCost">运费成本</label>
+                        <input type="number" id="shippingCost" placeholder="输入运费金额">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>商品清单</label>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>商品ID</th>
+                                <th>商品名称</th>
+                                <th>数量</th>
+                                <th>单价</th>
+                                <th>分摊运费</th>
+                                <th>总成本</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SP10001</td>
+                                <td>新鲜草莓500g</td>
+                                <td>50</td>
+                                <td>¥12.50</td>
+                                <td>¥0.80</td>
+                                <td>¥665.00</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SP10002</td>
+                                <td>草莓果酱250ml</td>
+                                <td>30</td>
+                                <td>¥18.00</td>
+                                <td>¥0.48</td>
+                                <td>¥554.40</td>
+                                <td class="actions">
+                                    <button class="action-btn"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <button class="btn"><i class="fas fa-save"></i> 保存入库记录</button>
+                </div>
+            </section>
+            
+            <!-- 销售出库 -->
+            <section id="outbound" class="content-section hidden">
+                <div class="section-title">
+                    <h2><i class="fas fa-arrow-circle-up"></i> 销售出库</h2>
+                    <div>
+                        <button class="btn"><i class="fas fa-plus"></i> 新增销售</button>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="saleProduct">选择商品</label>
+                        <select id="saleProduct">
+                            <option value="">-- 选择商品 --</option>
+                            <option value="SP10001">新鲜草莓500g</option>
+                            <option value="SP10002">草莓果酱250ml</option>
+                            <option value="SP10003">草莓干零食100g</option>
+                            <option value="SP10004">草莓味酸奶200ml</option>
+                            <option value="SP10005">草莓蛋糕300g</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="saleQuantity">销售数量</label>
+                        <input type="number" id="saleQuantity" placeholder="输入数量">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="salePrice">销售单价</label>
+                        <input type="number" id="salePrice" placeholder="输入单价">
+                    </div>
+                    <div class="form-group">
+                        <label>成本单价</label>
+                        <div style="background-color: var(--primary-light); padding: 12px 15px; border-radius: 8px;">
+                            <span id="costPrice">¥0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>总销售额</label>
+                        <div style="background-color: var(--secondary-light); padding: 12px 15px; border-radius: 8px;">
+                            <span id="totalSale">¥0.00</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>总利润</label>
+                        <div style="background-color: var(--accent-light); padding: 12px 15px; border-radius: 8px;">
+                            <span id="totalProfit">¥0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: right; margin-top: 20px;">
+                    <button class="btn"><i class="fas fa-cash-register"></i> 完成销售</button>
+                </div>
+            </section>
+            
+            <!-- 库存看板 -->
+            <section id="inventory" class="content-section hidden">
+                <div class="section-title">
+                    <h2><i class="fas fa-warehouse"></i> 库存看板</h2>
+                    <div>
+                        <button class="btn"><i class="fas fa-sync-alt"></i> 刷新数据</button>
+                    </div>
+                </div>
+                
+                <div class="inventory-warning">
+                    <i class="fas fa-exclamation-circle" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <h3>库存预警</h3>
+                        <p>有 <strong>5</strong> 个商品库存低于安全水平，请及时补货。</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>商品ID</th>
+                                <th>商品名称</th>
+                                <th>当前库存</th>
+                                <th>安全库存</th>
+                                <th>库存状态</th>
+                                <th>最近销售</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="warning">
+                                <td>SP10004</td>
+                                <td>草莓味酸奶200ml</td>
+                                <td>1</td>
+                                <td>10</td>
+                                <td><span class="trend down"><i class="fas fa-exclamation-triangle"></i> 严重不足</span></td>
+                                <td>2023-07-20</td>
+                            </tr>
+                            <tr class="warning">
+                                <td>SP10007</td>
+                                <td>草莓冰淇淋500g</td>
+                                <td>3</td>
+                                <td>15</td>
+                                <td><span class="trend down"><i class="fas fa-exclamation-triangle"></i> 库存不足</span></td>
+                                <td>2023-07-22</td>
+                            </tr>
+                            <tr>
+                                <td>SP10001</td>
+                                <td>新鲜草莓500g</td>
+                                <td>125</td>
+                                <td>50</td>
+                                <td><span class="trend up">库存充足</span></td>
+                                <td>2023-07-23</td>
+                            </tr>
+                            <tr>
+                                <td>SP10002</td>
+                                <td>草莓果酱250ml</td>
+                                <td>86</td>
+                                <td>30</td>
+                                <td><span class="trend up">库存充足</span></td>
+                                <td>2023-07-23</td>
+                            </tr>
+                            <tr class="warning">
+                                <td>SP10009</td>
+                                <td>草莓巧克力100g</td>
+                                <td>5</td>
+                                <td>20</td>
+                                <td><span class="trend down"><i class="fas fa-exclamation-triangle"></i> 库存不足</span></td>
+                                <td>2023-07-21</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>草莓人赚钱计划 - 进销存管理系统 &copy; 2023 | 让您的草莓生意更赚钱</p>
+        </footer>
     </div>
-
-    <div class="mobile-menu">
-        <div class="menu-item" data-tab="products">
-            <i class="fas fa-box"></i>
-            <span>商品</span>
-        </div>
-        <div class="menu-item active" data-tab="inbound">
-            <i class="fas fa-arrow-down"></i>
-            <span>入库</span>
-        </div>
-        <div class="menu-item" data-tab="outbound">
-            <i class="fas fa-arrow-up"></i>
-            <span>销售</span>
-        </div>
-        <div class="menu-item" data-tab="inventory">
-            <i class="fas fa-chart-bar"></i>
-            <span>库存</span>
-        </div>
-    </div>
-
-    <!-- 商品项目模板 -->
-    <template id="itemTemplate">
-        <div class="package-item" data-id="">
-            <div class="item-header">
-                <h4>商品 #<span class="item-number">1</span></h4>
-                <div class="item-actions">
-                    <button type="button" class="btn btn-warning btn-sm calculate-btn">
-                        <i class="fas fa-calculator"></i> 计算
-                    </button>
-                    <button type="button" class="btn btn-warning btn-sm remove-btn">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="item-row">
-                <div class="form-group">
-                    <label>选择商品</label>
-                    <select class="product-select">
-                        <option value="">-- 选择商品 --</option>
-                        <option value="P001">智能手机 (P001)</option>
-                        <option value="P002">无线耳机 (P002)</option>
-                        <option value="P003">智能手表 (P003)</option>
-                        <option value="P004">平板电脑 (P004)</option>
-                        <option value="P005">蓝牙音箱 (P005)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>采购单价</label>
-                    <input type="number" class="purchase-price" placeholder="输入单价" step="0.01" value="1200">
-                </div>
-                <div class="form-group">
-                    <label>数量</label>
-                    <input type="number" class="quantity" placeholder="输入数量" value="5">
-                </div>
-                <div class="form-group">
-                    <label>采购金额</label>
-                    <input type="text" class="purchase-amount" value="¥6,000.00" readonly>
-                </div>
-            </div>
-            <div class="item-calculations">
-                <div class="calculation-row">
-                    <span>运费分摊:</span>
-                    <span class="sharing-cost">¥0.00</span>
-                </div>
-                <div class="calculation-row">
-                    <span>单位运费:</span>
-                    <span class="unit-shipping">¥0.00</span>
-                </div>
-                <div class="calculation-row total">
-                    <span>单位成本:</span>
-                    <span class="unit-cost">¥0.00</span>
-                </div>
-            </div>
-        </div>
-    </template>
 
     <script>
-        // 标签切换功能
-        document.querySelectorAll('.tab, .menu-item').forEach(tab => {
-            tab.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                
-                // 更新标签状态
-                document.querySelectorAll('.tab, .menu-item').forEach(t => {
-                    t.classList.remove('active');
+        // 页面导航功能
+        document.querySelectorAll('.nav-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                // 移除所有按钮的active类
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
                 });
+                
+                // 添加当前按钮的active类
                 this.classList.add('active');
                 
-                // 显示对应内容
-                document.querySelectorAll('.tab-pane').forEach(pane => {
-                    pane.classList.remove('active');
+                // 隐藏所有内容区域
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.add('hidden');
                 });
-                document.getElementById(tabName).classList.add('active');
+                
+                // 显示目标内容区域
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.remove('hidden');
             });
         });
         
-        // 设置默认日期为今天
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('inboundDate').value = today;
-        
-        // 商品项目管理
-        let itemCounter = 1;
-        const packageItemsContainer = document.getElementById('packageItemsContainer');
-        const itemTemplate = document.getElementById('itemTemplate');
-        const addItemBtn = document.getElementById('addItemBtn');
-        
-        // 添加初始商品
-        addNewItem();
-        
-        // 添加新商品项目
-        addItemBtn.addEventListener('click', addNewItem);
-        
-        function addNewItem() {
-            const clone = itemTemplate.content.cloneNode(true);
-            const itemElement = clone.querySelector('.package-item');
-            itemElement.setAttribute('data-id', `item-${itemCounter}`);
-            
-            // 更新商品编号
-            const itemNumber = itemElement.querySelector('.item-number');
-            itemNumber.textContent = itemCounter;
-            
-            // 添加删除按钮事件
-            const removeBtn = itemElement.querySelector('.remove-btn');
-            removeBtn.addEventListener('click', function() {
-                itemElement.remove();
-                updatePackageSummary();
-            });
-            
-            // 添加计算按钮事件
-            const calculateBtn = itemElement.querySelector('.calculate-btn');
-            calculateBtn.addEventListener('click', function() {
-                calculateItem(itemElement);
-            });
-            
-            // 添加输入变化事件
-            const inputs = itemElement.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    calculateItem(itemElement);
-                });
-                input.addEventListener('input', function() {
-                    if (input.classList.contains('purchase-price') || 
-                        input.classList.contains('quantity')) {
-                        calculatePurchaseAmount(itemElement);
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('topProductsChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['草莓蛋糕', '新鲜草莓', '草莓果酱', '草莓酸奶', '草莓巧克力', '草莓干', '草莓冰淇淋', '草莓饼干', '草莓果冻', '草莓派'],
+                    datasets: [{
+                        label: '销售额 (¥)',
+                        data: [12500, 11800, 9800, 8540, 7450, 6320, 5840, 5210, 4780, 4250],
+                        backgroundColor: [
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)',
+                            'rgba(232, 180, 188, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)',
+                            'rgba(232, 180, 188, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
                     }
-                });
-            });
-            
-            packageItemsContainer.appendChild(clone);
-            itemCounter++;
-            
-            // 初始化计算
-            calculateItem(itemElement);
-            updatePackageSummary();
-        }
-        
-        // 计算单个商品项目
-        function calculateItem(item) {
-            calculatePurchaseAmount(item);
-            
-            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
-            const purchaseAmount = parseFloat(item.querySelector('.purchase-amount').textContent.replace('¥', '').replace(',', '')) || 0;
-            const quantity = parseFloat(item.querySelector('.quantity').value) || 0;
-            
-            if (purchaseAmount <= 0 || quantity <= 0) return;
-            
-            // 计算总采购金额
-            const totalPurchaseAmount = Array.from(document.querySelectorAll('.purchase-amount'))
-                .reduce((sum, el) => sum + parseFloat(el.textContent.replace('¥', '').replace(',', '') || 0, 0);
-            
-            if (totalPurchaseAmount <= 0) return;
-            
-            // 计算运费分摊
-            const sharingRatio = purchaseAmount / totalPurchaseAmount;
-            const sharingCost = shippingCost * sharingRatio;
-            
-            // 计算单位运费和单位成本
-            const unitShipping = sharingCost / quantity;
-            const purchasePrice = parseFloat(item.querySelector('.purchase-price').value) || 0;
-            const unitCost = purchasePrice + unitShipping;
-            
-            // 更新显示
-            item.querySelector('.sharing-cost').textContent = `¥${sharingCost.toFixed(2)}`;
-            item.querySelector('.unit-shipping').textContent = `¥${unitShipping.toFixed(2)}`;
-            item.querySelector('.unit-cost').textContent = `¥${unitCost.toFixed(2)}`;
-        }
-        
-        // 计算采购金额
-        function calculatePurchaseAmount(item) {
-            const price = parseFloat(item.querySelector('.purchase-price').value) || 0;
-            const quantity = parseFloat(item.querySelector('.quantity').value) || 0;
-            const amount = price * quantity;
-            
-            item.querySelector('.purchase-amount').value = `¥${amount.toFixed(2)}`;
-            item.querySelector('.purchase-amount').textContent = `¥${amount.toFixed(2)}`;
-            
-            updatePackageSummary();
-        }
-        
-        // 更新包裹摘要信息
-        function updatePackageSummary() {
-            const items = document.querySelectorAll('.package-item');
-            const itemCount = items.length;
-            
-            // 计算总采购金额
-            const totalProductAmount = Array.from(document.querySelectorAll('.purchase-amount'))
-                .reduce((sum, el) => sum + parseFloat(el.textContent.replace('¥', '').replace(',', '') || 0, 0);
-            
-            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
-            const totalPackageCost = totalProductAmount + shippingCost;
-            
-            // 更新显示
-            document.getElementById('itemCount').textContent = `${itemCount} 个商品`;
-            document.getElementById('totalProductAmount').textContent = `¥${totalProductAmount.toFixed(2)}`;
-            document.getElementById('displayShippingCost').textContent = `¥${shippingCost.toFixed(2)}`;
-            document.getElementById('totalPackageCost').textContent = `¥${totalPackageCost.toFixed(2)}`;
-            
-            // 重新计算所有商品项目
-            items.forEach(item => calculateItem(item));
-        }
-        
-        // 运费变化时更新
-        document.getElementById('shippingCost').addEventListener('input', updatePackageSummary);
-        
-        // 表单提交处理
-        document.getElementById('inboundForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // 收集商品数据
-            const items = [];
-            document.querySelectorAll('.package-item').forEach(item => {
-                const product = item.querySelector('.product-select').value;
-                const productName = item.querySelector('.product-select').selectedOptions[0].text;
-                const price = parseFloat(item.querySelector('.purchase-price').value);
-                const quantity = parseFloat(item.querySelector('.quantity').value);
-                const unitCost = parseFloat(item.querySelector('.unit-cost').textContent.replace('¥', ''));
-                
-                if (product && price && quantity) {
-                    items.push({
-                        productId: product,
-                        productName: productName.split(' (')[0],
-                        purchasePrice: price,
-                        quantity: quantity,
-                        unitCost: unitCost
-                    });
                 }
             });
-            
-            if (items.length === 0) {
-                alert('请添加至少一个商品');
-                return;
-            }
-            
-            // 创建入库记录
-            const record = {
-                id: document.getElementById('inboundId').value,
-                date: document.getElementById('inboundDate').value,
-                shippingCost: parseFloat(document.getElementById('shippingCost').value),
-                items: items
-            };
-            
-            console.log('入库记录:', record);
-            alert(`入库记录已保存！\n单号: ${record.id}\n商品数量: ${items.length}\n总成本: ¥${parseFloat(document.getElementById('totalPackageCost').textContent.replace('¥', ''))}`);
-            
-            // 这里实际实现中会有数据库操作
         });
         
-        // 初始化页面
-        document.getElementById('shippingCost').addEventListener('input', updatePackageSummary);
+        // 销售出库计算功能
+        document.getElementById('salePrice').addEventListener('input', calculateProfit);
+        document.getElementById('saleQuantity').addEventListener('input', calculateProfit);
+        
+        function calculateProfit() {
+            const quantity = parseFloat(document.getElementById('saleQuantity').value) || 0;
+            const price = parseFloat(document.getElementById('salePrice').value) || 0;
+            const cost = 15.80; // 实际应用中应从数据库获取
+            
+            document.getElementById('costPrice').textContent = `¥${cost.toFixed(2)}`;
+            document.getElementById('totalSale').textContent = `¥${(quantity * price).toFixed(2)}`;
+            document.getElementById('totalProfit').textContent = `¥${(quantity * (price - cost)).toFixed(2)}`;
+        }
     </script>
 </body>
 </html>
