@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>草莓人赚钱计划 - 小红书风格</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E60023; /* 小红书主色调 */
+            --secondary: #D81E06; /* 小红书辅助红色 */
+            --success: #07C160; /* 微信绿作为成功色 */
+            --warning: #FF9A14; /* 橙色作为警告色 */
+            --light: #f8f9fa;
+            --dark: #333333; /* 深灰色代替纯黑 */
+            --gray: #8a8a8a; /* 中灰色 */
+            --light-gray: #f0f0f0; /* 浅灰色 */
+            --card-bg: #ffffff; /* 卡片背景 */
+            --background: #f8f8f8; /* 页面背景 */
+            --border-radius: 16px; /* 圆角大小 */
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.08); /* 柔和阴影 */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 70px;
+        }
+        
+        .container {
+            max-width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+        
+        /* 小红书风格头部 */
+        .app-header {
+            background: var(--card-bg);
+            color: var(--dark);
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.6rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* 小红书风格标签页 */
+        .nav-tabs {
+            display: flex;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--light-gray);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 15px;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+        }
+        
+        .tab {
+            padding: 16px 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .tab.active {
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .tab-pane {
+            display: none;
+        }
+        
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 小红书卡片风格 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .card-header {
+            padding: 18px 24px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--light-gray);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            padding: 20px 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: var(--card-bg);
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 0, 35, 0.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(230, 0, 35, 0.2);
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(230, 0, 35, 0.3);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+            box-shadow: 0 4px 12px rgba(255, 154, 20, 0.2);
+        }
+        
+        .btn-warning:hover {
+            background: #e68a00;
+            box-shadow: 0 6px 15px rgba(255, 154, 20, 0.3);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            box-shadow: 0 4px 12px rgba(7, 193, 96, 0.2);
+        }
+        
+        .btn-success:hover {
+            background: #06a74f;
+            box-shadow: 0 6px 15px rgba(7, 193, 96, 0.3);
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border-radius: 20px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(230, 0, 35, 0.05);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: var(--border-radius);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        th, td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        th {
+            background: var(--card-bg);
+            font-weight: 600;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        tbody tr:hover {
+            background: rgba(230, 0, 35, 0.03);
+        }
+        
+        .stock-low {
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        .product-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            overflow: hidden;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 25px 20px;
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        
+        .stats-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+        
+        .stats-label {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+        
+        .alert-warning {
+            background: #fff8e6;
+            border-left: 4px solid var(--warning);
+            color: #856404;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+            font-weight: bold;
+            font-size: 1.05rem;
+        }
+        
+        .profit {
+            color: var(--success);
+        }
+        
+        .loss {
+            color: var(--warning);
+        }
+        
+        .mobile-menu {
+            display: flex;
+            justify-content: space-around;
+            background: var(--card-bg);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 0;
+            border-top: 1px solid var(--light-gray);
+            z-index: 100;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.75rem;
+            color: var(--gray);
+            gap: 4px;
+            padding: 0 15px;
+        }
+        
+        .menu-item.active {
+            color: var(--primary);
+        }
+        
+        .menu-item i {
+            font-size: 1.4rem;
+        }
+        
+        .package-items {
+            background: #fafafa;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .package-item {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .item-calculations {
+            background: #f9f2ff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            border: 1px solid #f0e6ff;
+        }
+        
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+        
+        .calculation-row.total {
+            font-weight: bold;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #e0d0ff;
+            font-size: 1.05rem;
+        }
+        
+        .package-summary {
+            background: #f0f9ff;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid #e6f3ff;
+        }
+        
+        .summary-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .strawberry-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+        }
+        
+        .strawberry-icon:before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: #0a5e2a;
+            border-radius: 50%;
+        }
+        
+        .strawberry-seeds {
+            position: absolute;
+            top: 6px;
+            left: 4px;
+            width: 16px;
+            height: 16px;
+        }
+        
+        .strawberry-seeds span {
+            position: absolute;
+            width: 2px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 1px;
+        }
+        
+        /* 草莓种子位置 */
+        .strawberry-seeds span:nth-child(1) { top: 2px; left: 3px; }
+        .strawberry-seeds span:nth-child(2) { top: 2px; left: 8px; }
+        .strawberry-seeds span:nth-child(3) { top: 2px; left: 13px; }
+        .strawberry-seeds span:nth-child(4) { top: 8px; left: 5px; }
+        .strawberry-seeds span:nth-child(5) { top: 8px; left: 11px; }
+        .strawberry-seeds span:nth-child(6) { top: 14px; left: 3px; }
+        .strawberry-seeds span:nth-child(7) { top: 14px; left: 8px; }
+        .strawberry-seeds span:nth-child(8) { top: 14px; left: 13px; }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            margin: 30px 0 20px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+        
+        .section-title:before {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 3px;
+            margin-right: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 750px;
+            }
+            
+            .mobile-menu {
+                display: none;
+            }
+            
+            .nav-tabs {
+                justify-content: center;
+            }
+            
+            .item-row {
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+            }
+            
+            .app-header {
+                padding: 15px 0;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 970px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="strawberry-icon">
+                    <div class="strawberry-seeds">
+                        <span></span><span></span><span></span>
+                        <span></span><span></span>
+                        <span></span><span></span><span></span>
+                    </div>
+                </div>
+                草莓人赚钱计划
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">S</div>
+                <span>草莓人</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="tab" data-tab="products">商品档案</div>
+        <div class="tab active" data-tab="inbound">入库管理</div>
+        <div class="tab" data-tab="outbound">销售出库</div>
+        <div class="tab" data-tab="inventory">库存看板</div>
+        <div class="tab" data-tab="analysis">收益分析</div>
+    </div>
+
+    <div class="container">
+        <div class="section-title">入库管理</div>
+        
+        <div class="tab-content">
+            <div id="inbound" class="tab-pane active">
+                <div class="card">
+                    <div class="card-header">
+                        <span>添加入库记录</span>
+                    </div>
+                    <div class="card-body">
+                        <form id="inboundForm">
+                            <div class="form-group">
+                                <label for="inboundId">入库单号</label>
+                                <input type="text" id="inboundId" placeholder="例如: IN20230622001" required value="IN20230715001">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="inboundDate">入库日期</label>
+                                <input type="date" id="inboundDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="shippingCost">包裹运费</label>
+                                <input type="number" id="shippingCost" placeholder="输入总运费" step="0.01" required value="150">
+                            </div>
+                            
+                            <div class="package-items">
+                                <div class="package-header">
+                                    <h3>包裹商品</h3>
+                                    <p style="color: var(--gray); margin-top: 8px;">一个包裹可包含多个商品，系统会自动分摊运费成本</p>
+                                </div>
+                                
+                                <div id="packageItemsContainer">
+                                    <!-- 商品项目会动态添加到这里 -->
+                                </div>
+                                
+                                <button type="button" id="addItemBtn" class="btn btn-outline">
+                                    <i class="fas fa-plus-circle"></i> 添加商品
+                                </button>
+                            </div>
+                            
+                            <div class="package-summary">
+                                <div class="summary-title">
+                                    <span>包裹汇总</span>
+                                    <span id="itemCount">0 个商品</span>
+                                </div>
+                                <div class="calculation-row">
+                                    <span>商品总金额:</span>
+                                    <span id="totalProductAmount">¥0.00</span>
+                                </div>
+                                <div class="calculation-row">
+                                    <span>包裹运费:</span>
+                                    <span id="displayShippingCost">¥0.00</span>
+                                </div>
+                                <div class="calculation-row total">
+                                    <span>包裹总成本:</span>
+                                    <span id="totalPackageCost">¥0.00</span>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-block" style="margin-top: 20px;">
+                                <i class="fas fa-save"></i> 保存入库记录
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>最近入库记录</span>
+                        <button class="btn btn-sm btn-outline">
+                            <i class="fas fa-history"></i> 查看全部
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>入库单号</th>
+                                        <th>日期</th>
+                                        <th>商品数量</th>
+                                        <th>运费</th>
+                                        <th>总成本</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>IN20230621003</td>
+                                        <td>2023-06-21</td>
+                                        <td>2</td>
+                                        <td>¥120.00</td>
+                                        <td>¥3,420.00</td>
+                                        <td><button class="btn btn-sm btn-outline">查看</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IN20230618002</td>
+                                        <td>2023-06-18</td>
+                                        <td>3</td>
+                                        <td>¥85.00</td>
+                                        <td>¥4,850.00</td>
+                                        <td><button class="btn btn-sm btn-outline">查看</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IN20230615001</td>
+                                        <td>2023-06-15</td>
+                                        <td>4</td>
+                                        <td>¥210.00</td>
+                                        <td>¥6,380.00</td>
+                                        <td><button class="btn btn-sm btn-outline">查看</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mobile-menu">
+        <div class="menu-item" data-tab="products">
+            <i class="fas fa-box"></i>
+            <span>商品</span>
+        </div>
+        <div class="menu-item active" data-tab="inbound">
+            <i class="fas fa-arrow-down"></i>
+            <span>入库</span>
+        </div>
+        <div class="menu-item" data-tab="outbound">
+            <i class="fas fa-arrow-up"></i>
+            <span>销售</span>
+        </div>
+        <div class="menu-item" data-tab="inventory">
+            <i class="fas fa-chart-bar"></i>
+            <span>库存</span>
+        </div>
+        <div class="menu-item" data-tab="analysis">
+            <i class="fas fa-coins"></i>
+            <span>收益</span>
+        </div>
+    </div>
+
+    <!-- 商品项目模板 -->
+    <template id="itemTemplate">
+        <div class="package-item" data-id="">
+            <div class="item-header">
+                <h4>商品 #<span class="item-number">1</span></h4>
+                <div class="item-actions">
+                    <button type="button" class="btn btn-success btn-sm calculate-btn">
+                        <i class="fas fa-calculator"></i> 计算
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm remove-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="item-row">
+                <div class="form-group">
+                    <label>选择商品</label>
+                    <select class="product-select">
+                        <option value="">-- 选择商品 --</option>
+                        <option value="P001">新鲜草莓 (P001)</option>
+                        <option value="P002">草莓果酱 (P002)</option>
+                        <option value="P003">草莓蛋糕 (P003)</option>
+                        <option value="P004">草莓干 (P004)</option>
+                        <option value="P005">草莓巧克力 (P005)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>采购单价</label>
+                    <input type="number" class="purchase-price" placeholder="输入单价" step="0.01" value="32.5">
+                </div>
+                <div class="form-group">
+                    <label>数量</label>
+                    <input type="number" class="quantity" placeholder="输入数量" value="20">
+                </div>
+                <div class="form-group">
+                    <label>采购金额</label>
+                    <input type="text" class="purchase-amount" value="¥650.00" readonly>
+                </div>
+            </div>
+            <div class="item-calculations">
+                <div class="calculation-row">
+                    <span>运费分摊:</span>
+                    <span class="sharing-cost">¥0.00</span>
+                </div>
+                <div class="calculation-row">
+                    <span>单位运费:</span>
+                    <span class="unit-shipping">¥0.00</span>
+                </div>
+                <div class="calculation-row total">
+                    <span>单位成本:</span>
+                    <span class="unit-cost">¥0.00</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // 设置默认日期为今天
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('inboundDate').value = today;
+        
+        // 标签切换功能
+        document.querySelectorAll('.tab, .menu-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabName = this.getAttribute('data-tab');
+                
+                // 更新标签状态
+                document.querySelectorAll('.tab, .menu-item').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // 显示对应内容
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                document.getElementById(tabName).classList.add('active');
+            });
+        });
+        
+        // 商品项目管理
+        let itemCounter = 1;
+        const packageItemsContainer = document.getElementById('packageItemsContainer');
+        const itemTemplate = document.getElementById('itemTemplate');
+        const addItemBtn = document.getElementById('addItemBtn');
+        
+        // 添加初始商品
+        addNewItem();
+        
+        // 添加新商品项目
+        addItemBtn.addEventListener('click', addNewItem);
+        
+        function addNewItem() {
+            const clone = itemTemplate.content.cloneNode(true);
+            const itemElement = clone.querySelector('.package-item');
+            itemElement.setAttribute('data-id', `item-${itemCounter}`);
+            
+            // 更新商品编号
+            const itemNumber = itemElement.querySelector('.item-number');
+            itemNumber.textContent = itemCounter;
+            
+            // 添加删除按钮事件
+            const removeBtn = itemElement.querySelector('.remove-btn');
+            removeBtn.addEventListener('click', function() {
+                itemElement.remove();
+                updatePackageSummary();
+            });
+            
+            // 添加计算按钮事件
+            const calculateBtn = itemElement.querySelector('.calculate-btn');
+            calculateBtn.addEventListener('click', function() {
+                calculateItem(itemElement);
+            });
+            
+            // 添加输入变化事件
+            const inputs = itemElement.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    calculateItem(itemElement);
+                });
+                input.addEventListener('input', function() {
+                    if (input.classList.contains('purchase-price') || 
+                        input.classList.contains('quantity')) {
+                        calculatePurchaseAmount(itemElement);
+                    }
+                });
+            });
+            
+            packageItemsContainer.appendChild(clone);
+            itemCounter++;
+            
+            // 初始化计算
+            calculateItem(itemElement);
+            updatePackageSummary();
+        }
+        
+        // 计算单个商品项目
+        function calculateItem(item) {
+            calculatePurchaseAmount(item);
+            
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const purchaseAmount = parseFloat(item.querySelector('.purchase-amount').textContent.replace('¥', '').replace(',', '')) || 0;
+            const quantity = parseFloat(item.querySelector('.quantity').value) || 0;
+            
+            if (purchaseAmount <= 0 || quantity <= 0) return;
+            
+            // 计算总采购金额
+            const totalPurchaseAmount = Array.from(document.querySelectorAll('.purchase-amount'))
+                .reduce((sum, el) => sum + parseFloat(el.textContent.replace('¥', '').replace(',', '') || 0, 0);
+            
+            if (totalPurchaseAmount <= 0) return;
+            
+            // 计算运费分摊
+            const sharingRatio = purchaseAmount / totalPurchaseAmount;
+            const sharingCost = shippingCost * sharingRatio;
+            
+            // 计算单位运费和单位成本
+            const unitShipping = sharingCost / quantity;
+            const purchasePrice = parseFloat(item.querySelector('.purchase-price').value) || 0;
+            const unitCost = purchasePrice + unitShipping;
+            
+            // 更新显示
+            item.querySelector('.sharing-cost').textContent = `¥${sharingCost.toFixed(2)}`;
+            item.querySelector('.unit-shipping').textContent = `¥${unitShipping.toFixed(2)}`;
+            item.querySelector('.unit-cost').textContent = `¥${unitCost.toFixed(2)}`;
+        }
+        
+        // 计算采购金额
+        function calculatePurchaseAmount(item) {
+            const price = parseFloat(item.querySelector('.purchase-price').value) || 0;
+            const quantity = parseFloat(item.querySelector('.quantity').value) || 0;
+            const amount = price * quantity;
+            
+            item.querySelector('.purchase-amount').value = `¥${amount.toFixed(2)}`;
+            item.querySelector('.purchase-amount').textContent = `¥${amount.toFixed(2)}`;
+            
+            updatePackageSummary();
+        }
+        
+        // 更新包裹摘要信息
+        function updatePackageSummary() {
+            const items = document.querySelectorAll('.package-item');
+            const itemCount = items.length;
+            
+            // 计算总采购金额
+            const totalProductAmount = Array.from(document.querySelectorAll('.purchase-amount'))
+                .reduce((sum, el) => sum + parseFloat(el.textContent.replace('¥', '').replace(',', '') || 0, 0);
+            
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const totalPackageCost = totalProductAmount + shippingCost;
+            
+            // 更新显示
+            document.getElementById('itemCount').textContent = `${itemCount} 个商品`;
+            document.getElementById('totalProductAmount').textContent = `¥${totalProductAmount.toFixed(2)}`;
+            document.getElementById('displayShippingCost').textContent = `¥${shippingCost.toFixed(2)}`;
+            document.getElementById('totalPackageCost').textContent = `¥${totalPackageCost.toFixed(2)}`;
+            
+            // 重新计算所有商品项目
+            items.forEach(item => calculateItem(item));
+        }
+        
+        // 运费变化时更新
+        document.getElementById('shippingCost').addEventListener('input', updatePackageSummary);
+        
+        // 表单提交处理
+        document.getElementById('inboundForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集商品数据
+            const items = [];
+            document.querySelectorAll('.package-item').forEach(item => {
+                const product = item.querySelector('.product-select').value;
+                const productName = item.querySelector('.product-select').selectedOptions[0].text;
+                const price = parseFloat(item.querySelector('.purchase-price').value);
+                const quantity = parseFloat(item.querySelector('.quantity').value);
+                const unitCost = parseFloat(item.querySelector('.unit-cost').textContent.replace('¥', ''));
+                
+                if (product && price && quantity) {
+                    items.push({
+                        productId: product,
+                        productName: productName.split(' (')[0],
+                        purchasePrice: price,
+                        quantity: quantity,
+                        unitCost: unitCost
+                    });
+                }
+            });
+            
+            if (items.length === 0) {
+                alert('请添加至少一个商品');
+                return;
+            }
+            
+            // 创建入库记录
+            const record = {
+                id: document.getElementById('inboundId').value,
+                date: document.getElementById('inboundDate').value,
+                shippingCost: parseFloat(document.getElementById('shippingCost').value),
+                items: items
+            };
+            
+            console.log('入库记录:', record);
+            alert(`入库记录已保存！\n单号: ${record.id}\n商品数量: ${items.length}\n总成本: ¥${parseFloat(document.getElementById('totalPackageCost').textContent.replace('¥', ''))}`);
+            
+            // 这里实际实现中会有数据库操作
+        });
+        
+        // 初始化页面
+        document.getElementById('shippingCost').addEventListener('input', updatePackageSummary);
+        
+        // 初始添加两个商品
+        setTimeout(() => {
+            addNewItem();
+            addNewItem();
+        }, 500);
+    </script>
+</body>
+</html>
